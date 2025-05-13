@@ -1,0 +1,301 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.navbar {
+  background-color: #28a745;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar h1 {
+  color: white;
+  font-size: 24px;
+  margin: 0;
+}
+
+.navbar .nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.navbar .nav-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.navbar .nav-links a:hover {
+  color: #c3e6cb;
+}
+
+.navbar .account-info {
+  color: white;
+  font-size: 14px;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 15px;
+}
+
+.alert {
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.alert.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.alert.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.form-container {
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.form-container .error {
+  color: #dc3545;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.form-container .account {
+  color: #333;
+  font-size: 14px;
+  margin-bottom: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.form-container label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.form-container input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.form-container input:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+.form-container .input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.form-container .input-group input {
+  flex: 1;
+}
+
+.form-container button {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.form-container button.primary {
+  background-color: #28a745;
+  color: white;
+}
+
+.form-container button.primary:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.form-container button.secondary {
+  background-color: #007bff;
+  color: white;
+}
+
+.form-container button.secondary:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.form-container button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.product-list {
+  margin-top: 30px;
+}
+
+.product-list h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.product-list table {
+  width: 100%;
+  background-color: white;
+  border-collapse: collapse;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.product-list th,
+.product-list td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.product-list th {
+  background-color: #28a745;
+  color: white;
+}
+
+.product-list tr:hover {
+  background-color: #f8f9fa;
+}
+
+.product-list .truncate {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.product-list .qr-code {
+  text-align: center;
+}
+
+.product-list button {
+  padding: 6px 12px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.product-list button:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.product-list button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.trace-result {
+  margin-top: 20px;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.trace-result h3 {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.trace-result .grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.trace-result .grid div {
+  flex: 1;
+  min-width: 200px;
+}
+
+.trace-result p {
+  margin: 5px 0;
+  color: #333;
+}
+
+.trace-result a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.trace-result a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .navbar .container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .navbar .nav-links {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .form-container {
+    padding: 15px;
+  }
+
+  .form-container .input-group {
+    flex-direction: column;
+  }
+
+  .product-list table {
+    font-size: 14px;
+  }
+
+  .product-list th,
+  .product-list td {
+    padding: 8px;
+  }
+
+  .product-list .qr-code img {
+    width: 40px;
+    height: 40px;
+  }
+}
