@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import { QRCodeCanvas } from 'qrcode.react'; // Sửa import
+import { BrowserRouter, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
+import { QRCodeCanvas } from 'qrcode.react';
 import ProductRegistration from './components/ProductRegistration';
 import ProductUpdate from './components/ProductUpdate';
 import ProductTrace from './components/ProductTrace';
 import NFTManager from './components/NFTManager';
+import Login from './components/Login';
+import Register from './components/Register';
+import Profile from './components/Profile';
+import AdminDashboard from './components/AdminDashboard';
+import { getUser, logout } from './auth';
 import './App.css';
 
 // ABI từ OrganicSupplyChain.sol (giữ nguyên)
@@ -848,7 +853,43 @@ const contractABI = [
   }
 ];
 
-const contractAddress = '0xd2b4a6dd625b20ad097ddada2316d1bfdc9ce111';
+const contractAddress = '0x6b17078875dcadb1f0f27d61e19ea8414b1d11cf';
+
+function Navbar() {
+  const user = getUser();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  return (
+    <nav className="navbar">
+      <div className="container">
+        <h1>Organic Supply Chain DApp</h1>
+        <div className="nav-links">
+          {user ? (
+            <>
+              <Link to="/">Trang chủ</Link>
+              <Link to="/register-product">Đăng ký sản phẩm</Link>
+              <Link to="/update">Cập nhật trạng thái</Link>
+              <Link to="/trace">Truy xuất sản phẩm</Link>
+              <Link to="/nft">Quản lý NFT</Link>
+              {user.role === 'admin' && <Link to="/admin">Quản trị</Link>}
+              <button onClick={handleLogout} className="error">Đăng xuất</button>
+            </>
+          ) : (
+            <>
+              <Link to="/login">Đăng nhập</Link>
+              <Link to="/register">Đăng ký</Link>
+            </>
+          )}
+        </div>
+      </div>
+    </nav>
+  );
+}
 
 function App() {
   const [account, setAccount] = useState('');
@@ -858,6 +899,7 @@ function App() {
   const [success, setSuccess] = useState('');
   const [network, setNetwork] = useState(null);
   const [loading, setLoading] = useState(false);
+  const user = getUser();
 
   const getNetworkName = (chainId) => {
     const id = typeof chainId === 'string' ? parseInt(chainId, 16) : chainId;
@@ -883,7 +925,7 @@ function App() {
     const init = async () => {
       try {
         if (!window.ethereum) {
-          setError('Please install MetaMask!');
+          setError('Vui lòng cài đặt MetaMask!');
           return;
         }
 
@@ -891,7 +933,7 @@ function App() {
         await window.ethereum.request({ method: 'eth_requestAccounts' });
         const accounts = await web3Instance.eth.getAccounts();
         if (accounts.length === 0) {
-          setError('Please connect a MetaMask account!');
+          setError('Vui lòng kết nối tài khoản MetaMask!');
           return;
         }
 
@@ -901,22 +943,26 @@ function App() {
         setAccount(accounts[0]);
         setNetwork(chainId);
         setContract(contractInstance);
-        await fetchProducts(contractInstance);
+        if (user) {
+          await fetchProducts(contractInstance);
+        }
 
         window.ethereum.on('accountsChanged', async (newAccounts) => {
           setAccount(newAccounts[0] || '');
-          await fetchProducts(contractInstance);
+          if (user) {
+            await fetchProducts(contractInstance);
+          }
         });
 
         window.ethereum.on('chainChanged', () => {
           window.location.reload();
         });
       } catch (err) {
-        setError(`Error connecting MetaMask: ${err.message}`);
+        setError(`Lỗi kết nối MetaMask: ${err.message}`);
       }
     };
     init();
-  }, []);
+  }, [user]);
 
   const fetchProducts = async (contractInstance) => {
     try {
@@ -925,7 +971,7 @@ function App() {
       setProducts(data);
       setError('');
     } catch (error) {
-      setError(`Error fetching products: ${error.message}`);
+      setError(`Lỗi khi tải sản phẩm: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -937,13 +983,13 @@ function App() {
     setSuccess('');
     try {
       if (!account) {
-        throw new Error('No MetaMask account connected.');
+        throw new Error('Không có tài khoản MetaMask được kết nối.');
       }
       if (!contract) {
-        throw new Error('Contract instance is not available.');
+        throw new Error('Không tìm thấy hợp đồng thông minh.');
       }
 
-      console.log('Calling deleteProduct with productId:', productId);
+      console.log('Gọi hàm deleteProduct với productId:', productId);
       const tx = await contract.methods
         .deleteProduct(productId)
         .send({
@@ -951,12 +997,12 @@ function App() {
           gas: 300000,
         });
 
-      console.log('Transaction successful:', tx);
-      setSuccess(`Product deleted successfully! Transaction hash: ${tx.transactionHash}`);
+      console.log('Giao dịch thành công:', tx);
+      setSuccess(`Xóa sản phẩm thành công! Mã giao dịch: ${tx.transactionHash}`);
       await fetchProducts(contract);
     } catch (err) {
-      console.error('Delete product error:', err);
-      setError(`Failed to delete product: ${err.message || 'Unknown error'}`);
+      console.error('Lỗi xóa sản phẩm:', err);
+      setError(`Không thể xóa sản phẩm: ${err.message || 'Lỗi không xác định'}`);
     } finally {
       setLoading(false);
     }
@@ -966,127 +1012,140 @@ function App() {
     <BrowserRouter>
       <div className="app">
         {/* Navbar */}
-        <nav className="navbar">
-          <div className="container">
-            <h1>Organic Supply Chain DApp</h1>
-            <div className="nav-links">
-              <Link to="/">Register Product</Link>
-              <Link to="/update">Update Status</Link>
-              <Link to="/trace">Trace Product</Link>
-              <Link to="/nft">Manage NFT</Link>
-            </div>
-            <div className="account-info" title={account}>
-              {account ? (
-                `Account: ${account.slice(0, 6)}...${account.slice(-4)} | Network: ${network ? getNetworkName(network) : 'Checking...'}`
-              ) : (
-                'Connecting to MetaMask...'
-              )}
-            </div>
-          </div>
-        </nav>
-
+        <Navbar />
+        
         {/* Main Content */}
         <div className="container">
           {error && <div className="alert error">{error}</div>}
           {success && <div className="alert success">{success}</div>}
 
           <Routes>
+            <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+            <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
             <Route
               path="/"
+              element={user ? <Profile /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/register-product"
               element={
-                <ProductRegistration
-                  contract={contract}
-                  account={account}
-                  setSuccess={setSuccess}
-                  setError={setError}
-                  fetchProducts={fetchProducts}
-                />
+                user ? (
+                  <ProductRegistration
+                    contract={contract}
+                    account={account}
+                    setSuccess={setSuccess}
+                    setError={setError}
+                    fetchProducts={fetchProducts}
+                  />
+                ) : (
+                  <Navigate to="/login" />
+                )
               }
             />
             <Route
               path="/update"
               element={
-                <ProductUpdate
-                  contract={contract}
-                  account={account}
-                  setSuccess={setSuccess}
-                  setError={setError}
-                  fetchProducts={fetchProducts}
-                  getNetworkName={getNetworkName}
-                />
+                user ? (
+                  <ProductUpdate
+                    contract={contract}
+                    account={account}
+                    setSuccess={setSuccess}
+                    setError={setError}
+                    fetchProducts={fetchProducts}
+                    getNetworkName={getNetworkName}
+                  />
+                ) : (
+                  <Navigate to="/login" />
+                )
               }
             />
             <Route
               path="/trace"
               element={
-                <ProductTrace
-                  contract={contract}
-                  account={account}
-                  setSuccess={setSuccess}
-                  setError={setError}
-                />
+                user ? (
+                  <ProductTrace
+                    contract={contract}
+                    account={account}
+                    setSuccess={setSuccess}
+                    setError={setError}
+                  />
+                ) : (
+                  <Navigate to="/login" />
+                )
               }
             />
             <Route
               path="/nft"
               element={
-                <NFTManager
-                  contract={contract}
-                  account={account}
-                  setSuccess={setSuccess}
-                  setError={setError}
-                />
+                user ? (
+                  <NFTManager
+                    contract={contract}
+                    account={account}
+                    setSuccess={setSuccess}
+                    setError={setError}
+                  />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                user && user.role === 'admin' ? <AdminDashboard /> : <Navigate to="/" />
               }
             />
           </Routes>
 
           {/* Product List */}
-          <div className="product-list">
-            <h2>Product List</h2>
-            {loading ? (
-              <p>Loading products...</p>
-            ) : products.length === 0 ? (
-              <p>No products available.</p>
-            ) : (
-              <table>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Origin</th>
-                    <th>Method</th>
-                    <th>Producer</th>
-                    <th>QR Code</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {products.map((product) => (
-                    <tr key={product.id}>
-                      <td>{product.id}</td>
-                      <td>{product.name}</td>
-                      <td>{product.origin}</td>
-                      <td>{product.productionMethod}</td>
-                      <td className="truncate" title={product.producer}>
-                        {product.producer.slice(0, 6)}...{product.producer.slice(-4)}
-                      </td>
-                      <td>
-                        <QRCodeCanvas value={product.id.toString()} size={50} />
-                      </td>
-                      <td>
-                        <button
-                          onClick={() => deleteProduct(product.id)}
-                          disabled={loading}
-                        >
-                          Delete
-                        </button>
-                      </td>
+          {user && (
+            <div className="product-list">
+              <h2>Danh sách sản phẩm</h2>
+              {loading ? (
+                <p>Đang tải sản phẩm...</p>
+              ) : products.length === 0 ? (
+                <p>Không có sản phẩm nào.</p>
+              ) : (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Tên</th>
+                      <th>Nguồn gốc</th>
+                      <th>Phương pháp</th>
+                      <th>Nhà sản xuất</th>
+                      <th>Mã QR</th>
+                      <th>Hành động</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
+                  </thead>
+                  <tbody>
+                    {products.map((product) => (
+                      <tr key={product.id}>
+                        <td>{product.id}</td>
+                        <td>{product.name}</td>
+                        <td>{product.origin}</td>
+                        <td>{product.productionMethod}</td>
+                        <td className="truncate" title={product.producer}>
+                          {product.producer.slice(0, 6)}...{product.producer.slice(-4)}
+                        </td>
+                        <td>
+                          <QRCodeCanvas value={product.id.toString()} size={50} />
+                        </td>
+                        <td>
+                          <button
+                            onClick={() => deleteProduct(product.id)}
+                            disabled={loading}
+                          >
+                            Xóa
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </BrowserRouter>
