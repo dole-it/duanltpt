@@ -1,129 +1,191 @@
-body {
+/* Xóa kiểu mặc định để đảm bảo đồng nhất */
+* {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  color: #333;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
+/* Biến CSS cho chủ đề đồng nhất */
+:root {
+  --primary-color: #2c6e49; /* Xanh rừng cho chủ đề hữu cơ */
+  --secondary-color: #f4a261; /* Cam ấm làm điểm nhấn */
+  --background-color: #f9fafb; /* Xám nhạt làm nền */
+  --text-color: #1f2937; /* Xám đậm cho chữ */
+  --error-color: #dc2626; /* Đỏ cho lỗi */
+  --success-color: #059669; /* Xanh lá cho thành công */
+  --border-radius: 8px;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --border-color: #d1d5db; /* Xám nhạt cho viền */
+}
+
+/* Kiểu cho body */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Thanh điều hướng (navbar) */
 .navbar {
-  background-color: #28a745;
-  padding: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: var(--primary-color);
+  padding: 1rem;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .navbar .container {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
+  padding: 0 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .navbar h1 {
   color: white;
-  font-size: 24px;
+  font-size: 1.75rem;
+  font-weight: 600;
   margin: 0;
 }
 
 .navbar .nav-links {
   display: flex;
-  gap: 20px;
+  gap: 1.5rem;
 }
 
 .navbar .nav-links a {
   color: white;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.3s ease, transform 0.2s ease;
 }
 
 .navbar .nav-links a:hover {
-  color: #c3e6cb;
+  color: var(--secondary-color);
+  transform: translateY(-1px);
 }
 
 .navbar .account-info {
   color: white;
-  font-size: 14px;
-  max-width: 300px;
+  font-size: 0.9rem;
+  max-width: 350px;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.9;
 }
 
+/* Container chính */
 .container {
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 0 15px;
+  max-width: 1280px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  flex: 1;
 }
 
+/* Thông báo (alert) */
 .alert {
-  padding: 15px;
-  border-radius: 4px;
-  margin-bottom: 20px;
+  padding: 1rem 1.5rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: opacity 0.3s ease;
 }
 
 .alert.error {
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: #fee2e2;
+  color: var(--error-color);
+  border: 1px solid var(--error-color);
 }
 
 .alert.success {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: #d1fae5;
+  color: var(--success-color);
+  border: 1px solid var(--success-color);
 }
 
+/* Biểu mẫu (form-container) */
 .form-container {
-  max-width: 500px;
-  margin: 0 auto;
+  max-width: 600px;
+  margin: 2rem auto;
   background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
 }
 
 .form-container h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
   text-align: center;
-  margin-bottom: 20px;
-  color: #333;
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
 }
 
 .form-container .error {
-  color: #dc3545;
-  font-size: 14px;
-  margin-bottom: 15px;
+  color: var(--error-color);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
 .form-container .account {
-  color: #333;
-  font-size: 14px;
-  margin-bottom: 15px;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: center;
 }
 
 .form-container label {
   display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-  color: #333;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
 }
 
-.form-container input {
+.form-container input,
+.form-container select,
+.form-container textarea {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  box-sizing: border-box;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-container input:focus,
+.form-container select:focus,
+.form-container textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(44, 110, 73, 0.1);
 }
 
 .form-container input:disabled {
-  background-color: #e9ecef;
+  background-color: #f3f4f6;
   cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .form-container .input-group {
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .form-container .input-group input {
@@ -131,75 +193,87 @@ body {
 }
 
 .form-container button {
-  padding: 10px;
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  width: 100%;
-  margin-top: 10px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .form-container button.primary {
-  background-color: #28a745;
+  background-color: var(--primary-color);
   color: white;
 }
 
 .form-container button.primary:hover:not(:disabled) {
-  background-color: #218838;
+  background-color: #22543d;
+  transform: translateY(-1px);
 }
 
 .form-container button.secondary {
-  background-color: #007bff;
+  background-color: var(--secondary-color);
   color: white;
 }
 
 .form-container button.secondary:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: #e76f51;
+  transform: translateY(-1px);
 }
 
 .form-container button:disabled {
-  background-color: #ccc;
+  background-color: #d1d5db;
   cursor: not-allowed;
+  transform: none;
 }
 
+/* Danh sách sản phẩm (product-list) */
 .product-list {
-  margin-top: 30px;
+  margin-top: 2rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
 }
 
 .product-list h2 {
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 15px;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
 }
 
 .product-list table {
   width: 100%;
-  background-color: white;
   border-collapse: collapse;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  font-size: 0.95rem;
+  background-color: white;
+  border-radius: var(--border-radius);
   overflow: hidden;
 }
 
 .product-list th,
 .product-list td {
-  padding: 12px;
+  padding: 1rem;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .product-list th {
-  background-color: #28a745;
+  background-color: var(--primary-color);
   color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
 }
 
 .product-list tr:hover {
-  background-color: #f8f9fa;
+  background-color: #f8fafc;
 }
 
 .product-list .truncate {
-  max-width: 100px;
+  max-width: 150px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -209,93 +283,152 @@ body {
   text-align: center;
 }
 
+.product-list .qr-code canvas {
+  width: 60px;
+  height: 60px;
+}
+
 .product-list button {
-  padding: 6px 12px;
-  background-color: #dc3545;
+  padding: 0.5rem 1rem;
+  background-color: var(--error-color);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius);
+  font-weight: 500;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .product-list button:hover:not(:disabled) {
-  background-color: #c82333;
+  background-color: #b91c1c;
+  transform: translateY(-1px);
 }
 
 .product-list button:disabled {
-  background-color: #ccc;
+  background-color: #d1d5db;
   cursor: not-allowed;
+  transform: none;
 }
 
+/* Kết quả truy xuất (trace-result) */
 .trace-result {
-  margin-top: 20px;
-  background-color: #f8f9fa;
-  padding: 15px;
-  border-radius: 8px;
+  margin-top: 2rem;
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
 }
 
 .trace-result h3 {
-  font-size: 20px;
-  color: #333;
-  margin-bottom: 15px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 1rem;
 }
 
 .trace-result .grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
 }
 
 .trace-result .grid div {
-  flex: 1;
-  min-width: 200px;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border-radius: var(--border-radius);
 }
 
 .trace-result p {
-  margin: 5px 0;
-  color: #333;
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+  color: var(--text-color);
 }
 
 .trace-result a {
-  color: #007bff;
+  color: var(--primary-color);
   text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
 }
 
 .trace-result a:hover {
+  color: var(--secondary-color);
   text-decoration: underline;
 }
 
-@media (max-width: 600px) {
+/* Responsive */
+@media (max-width: 768px) {
   .navbar .container {
     flex-direction: column;
-    gap: 10px;
+    gap: 1rem;
+    text-align: center;
   }
 
   .navbar .nav-links {
     flex-direction: column;
-    gap: 10px;
-    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .navbar .account-info {
+    font-size: 0.85rem;
+    max-width: 100%;
   }
 
   .form-container {
-    padding: 15px;
+    padding: 1.5rem;
+    margin: 1.5rem 1rem;
   }
 
   .form-container .input-group {
     flex-direction: column;
+    gap: 0.75rem;
   }
 
   .product-list table {
-    font-size: 14px;
+    font-size: 0.9rem;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
   }
 
   .product-list th,
   .product-list td {
-    padding: 8px;
+    padding: 0.75rem;
   }
 
-  .product-list .qr-code img {
-    width: 40px;
-    height: 40px;
+  .product-list .qr-code canvas {
+    width: 50px;
+    height: 50px;
+  }
+
+  .product-list .truncate {
+    max-width: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar h1 {
+    font-size: 1.5rem;
+  }
+
+  .form-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .form-container {
+    padding: 1rem;
+    margin: 1rem 0.5rem;
+  }
+
+  .product-list h2 {
+    font-size: 1.5rem;
+  }
+
+  .trace-result h3 {
+    font-size: 1.25rem;
+  }
+
+  .trace-result .grid {
+    grid-template-columns: 1fr;
   }
 }
